@@ -1,0 +1,26 @@
+footer {
+  height: 50px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+}
+
+.developer {
+  margin: 0;
+  padding: 0;
+  font-size: 0.7em;
+  font-style: italic;
+}
+
+footer a img {
+  width: 30px;
+  transition: 0.2s ease;
+}
+
+footer a img:hover {
+  transform: scale(1.2);
+}

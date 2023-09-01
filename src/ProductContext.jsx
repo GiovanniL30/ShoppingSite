@@ -1,71 +1,72 @@
-import React, {useState, useContext, createContext, useEffect} from "react";
+import React, { useState, useContext, createContext, useEffect } from "react";
 
-const CurrentProduct = createContext()
-const UpdateCurrentProduct  = createContext()
-const ProductsContext = createContext()
-const UpdateProductContext = createContext()
-const CartContext = createContext()
-const UpdateCartContext = createContext()
+const CurrentProduct = createContext();
+const UpdateCurrentProduct = createContext();
+const ProductsContext = createContext();
+const UpdateProductContext = createContext();
+const CartContext = createContext();
+const UpdateCartContext = createContext();
 
 export function currentContext() {
-    return useContext(CurrentProduct)
+  return useContext(CurrentProduct);
 }
 
 export function updateCurrentContext() {
-    return useContext(UpdateCurrentProduct)
+  return useContext(UpdateCurrentProduct);
 }
 
-export function productsContext(){
-    return useContext(ProductsContext)
+export function productsContext() {
+  return useContext(ProductsContext);
 }
 
 export function cartContext() {
-    return useContext(CartContext)
+  return useContext(CartContext);
 }
 
 export function updateCartContext() {
-    return useContext(UpdateCartContext)
+  return useContext(UpdateCartContext);
 }
 
+export function ProductContext({ children }) {
+  const [products, setProducts] = useState([]);
+  const [currentProduct, setCurrentProdut] = useState({});
+  const [cart, setCart] = useState(
+    (localStorage.getItem("cart-items") &&
+      JSON.parse(localStorage.getItem("cart-items"))) ||
+      []
+  );
 
-export function ProductContext({children}) {
+  //fetch API
+  useEffect(() => {
+    async function fetchAPI() {
+      const response = await fetch("https://fakestoreapi.com/products");
+      const data = await response.json();
 
-    const [products, setProducts] = useState([])
-    const [currentProduct, setCurrentProdut] = useState({});
-    const [cart, setCart] = useState([])
+      setProducts(data);
+    }
 
-    //fetch API
-    useEffect(()=> {
+    fetchAPI();
+  }, []);
 
-        async function fetchAPI() {
-          const response = await fetch("https://fakestoreapi.com/products")
-          const data = await response.json();
-  
-          setProducts(data)
-        }
-  
-        fetchAPI()
-    },[])
+  useEffect(() => {
+    setCurrentProdut(products[0]);
+  }, [products]);
 
-    useEffect(()=> {
-        setCurrentProdut(products[0])
-    }, [products])
+  useEffect(() => {
+    localStorage.setItem("cart-items", JSON.stringify(cart));
+  }, [cart]);
 
-
-    return (
-        <ProductsContext.Provider value={products}>
-            <CurrentProduct.Provider value={currentProduct}>
-                <UpdateCurrentProduct.Provider value={setCurrentProdut} >
-                    <CartContext.Provider value={cart}>
-                        <UpdateCartContext.Provider value={setCart}>
-                            {children}
-                        </UpdateCartContext.Provider>
-                    </CartContext.Provider>
-                </UpdateCurrentProduct.Provider>
-            </CurrentProduct.Provider>
-        </ProductsContext.Provider>
-      
-    )
-
-
+  return (
+    <ProductsContext.Provider value={products}>
+      <CurrentProduct.Provider value={currentProduct}>
+        <UpdateCurrentProduct.Provider value={setCurrentProdut}>
+          <CartContext.Provider value={cart}>
+            <UpdateCartContext.Provider value={setCart}>
+              {children}
+            </UpdateCartContext.Provider>
+          </CartContext.Provider>
+        </UpdateCurrentProduct.Provider>
+      </CurrentProduct.Provider>
+    </ProductsContext.Provider>
+  );
 }
