@@ -1,0 +1,6 @@
+.current-image {
+    margin-top: 1rem;
+    width: 100%;
+    height: 300px;
+    object-fit: contain;
+}
